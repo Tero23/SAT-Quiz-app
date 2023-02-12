@@ -16,6 +16,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      scores: {
+        type: Sequelize.JSON,
+        defaultValue: [],
+      },
+      randomNums: {
+        type: Sequelize.JSON,
+        defaultValue: [],
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

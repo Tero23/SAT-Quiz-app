@@ -19,11 +19,19 @@ exports.createQuestion = catchAsync(async (req, res, next) => {
 });
 
 exports.getTenQuestions = catchAsync(async (req, res, next) => {
+  if (req.user.scores.length % 5 === 0) {
+    req.user.randomNums = [];
+    await req.user.save();
+  }
   const q = await Question.findAll({});
   let randomNums = [];
   while (randomNums.length <= 9) {
-    let num = Math.floor(Math.random() * 30 + 1);
-    if (!randomNums.includes(num)) randomNums.push(num);
+    let num = Math.floor(Math.random() * 80) + 1;
+    if (!randomNums.includes(num) && !req.user.randomNums.includes(num)) {
+      randomNums.push(num);
+      req.user.randomNums = [...req.user.randomNums, num];
+      await req.user.save();
+    }
   }
   const questions = q.filter((el, i) => {
     return randomNums.includes(el.id);

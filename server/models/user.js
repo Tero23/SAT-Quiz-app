@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
           len: [10, 100],
         },
       },
+      scores: {
+        type: DataTypes.JSON,
+        defaultValue: [],
+      },
+      randomNums: {
+        type: DataTypes.JSON,
+        defaultValue: [],
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

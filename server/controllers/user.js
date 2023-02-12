@@ -43,3 +43,38 @@ exports.login = catchAsync(async (req, res, next) => {
       user,
     });
 });
+
+exports.logout = catchAsync(async (req, res, next) => {
+  res
+    .status(200)
+    .clearCookie("jwt")
+    .json({
+      status: "success",
+      message: `${req.user.username} logged out successfully`,
+    });
+});
+
+exports.saveScore = catchAsync(async (req, res, next) => {
+  console.log(new Date(Date.now()) - new Date(req.user.updatedAt).getTime());
+  if (new Date(Date.now()) - new Date(req.user.updatedAt).getTime() < 2000)
+    return next(new AppError("One at a time!", 400));
+  const { score } = req.body;
+  req.user.scores = [...req.user.scores, score];
+  await req.user.save();
+  res.status(200).json({ msg: "Score added successfully!" });
+});
+
+exports.getUserStats = catchAsync(async (req, res, next) => {
+  const scores = req.user.scores;
+  const max = Math.max(...scores);
+  const min = Math.min(...scores);
+  const sum = scores.reduce((acc, el) => acc + el, 0);
+  const avg = Math.round((sum / scores.length) * 100) / 100;
+  res.status(200).json({
+    name: req.user.username,
+    attempts: scores.length,
+    max,
+    min,
+    avg,
+  });
+});
