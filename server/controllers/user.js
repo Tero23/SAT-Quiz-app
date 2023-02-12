@@ -56,7 +56,7 @@ exports.logout = catchAsync(async (req, res, next) => {
 
 exports.saveScore = catchAsync(async (req, res, next) => {
   console.log(new Date(Date.now()) - new Date(req.user.updatedAt).getTime());
-  if (new Date(Date.now()) - new Date(req.user.updatedAt).getTime() < 2000)
+  if (new Date(Date.now()) - new Date(req.user.updatedAt).getTime() < 1000)
     return next(new AppError("One at a time!", 400));
   const { score } = req.body;
   req.user.scores = [...req.user.scores, score];
